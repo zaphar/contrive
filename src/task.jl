@@ -9,3 +9,6 @@ struct Milestone <: AbstractTask
     name::AbstractString
     description::AbstractString
 end
+
+struct Root <: AbstractTask
+end
