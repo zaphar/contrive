@@ -1,0 +1,4 @@
+name = "Contrive"
+uuid = "bd56b9b0-214c-11ea-06c8-21340275cd5d"
+authors = ["Jeremy Wall <jeremy@marzhillstudios.com>"]
+version = "0.0.1"
