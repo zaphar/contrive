@@ -26,18 +26,28 @@ end
 
 taskidx(p::Project, t::AbstractTask) = findfirst(v -> v == t, p.tasks)
 
-adddep!(p::Project, from, to) = begin
-    fromidx = addtask!(p, from)
-    toidx = addtask!(p, to)
-    push!(p.graph, (fromidx, toidx))
+adddep!(p::Project, first, next) = begin
+    firstidx = addtask!(p, first)
+    nexxtidx = addtask!(p, next)
+    push!(p.graph, (firstidx, nexxtidx))
 end
 
 addtoptask(p::Project, t::AbstractTask) = adddep!(p, p.root, t)
 
-ordertasks(p::Project) = begin
+makegraph(p::Project) = begin
     g = SimpleDiGraph{Int64}(length(p.graph)+1)
     for (from, to) in p.graph
         @assert add_edge!(g, from, to) "Unable to add edge to graph"
     end
-    return topological_sort_by_dfs(g)
+    return g
+end
+
+ordertasks(p::Project) = begin
+    g = makegraph(p)
+    return LightGraphs.topological_sort_by_dfs(g)
+end
+
+orderedges(p::Project) = begin
+    g = makegraph(p)
+    collect(edges(dfs_tree(g, taskidx(p, p.root))))
 end

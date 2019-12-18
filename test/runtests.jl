@@ -84,4 +84,7 @@ end
     println(ts)
     @test length(p.tasks) == length(ts)
     @test ts[1] == idx(p, p.root)
+    es = Contrive.orderedges(p)
+    @test length(p.graph) == length(es)
+    @test first(ts[1]) == idx(p, p.root)
 end
