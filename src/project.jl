@@ -17,6 +17,8 @@ Project(name, description) = begin
     p
 end
 
+gettask(p::Project, idx) = get(p.tasks, idx, Nothing)
+
 addtask!(p::Project, t::AbstractTask) = begin
     if !any(v -> v == t, p.tasks)
         push!(p.tasks, t)
@@ -32,7 +34,7 @@ adddep!(p::Project, first, next) = begin
     push!(p.graph, (firstidx, nexxtidx))
 end
 
-addtoptask(p::Project, t::AbstractTask) = adddep!(p, p.root, t)
+addtoptask!(p::Project, t::AbstractTask) = adddep!(p, p.root, t)
 
 makegraph(p::Project) = begin
     g = SimpleDiGraph{Int64}(length(p.graph)+1)
@@ -49,5 +51,13 @@ end
 
 orderedges(p::Project) = begin
     g = makegraph(p)
-    collect(edges(dfs_tree(g, taskidx(p, p.root))))
+    es = OrderedDict{Int64, Array{Int64}}()
+    for e in edges(dfs_tree(g, taskidx(p, p.root)))
+        s = src(e)
+        d = dst(e)
+        edges = get(es, s, Int64[])
+        push!(edges, d)
+        es[s] = edges
+    end
+    return es
 end

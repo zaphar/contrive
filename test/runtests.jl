@@ -65,7 +65,7 @@ end
     @test length(p.graph) == 2
 
     step3ish = Step("Step 3 ish", "A step with no dependencies")
-    addtoptask(p, step3ish)
+    addtoptask!(p, step3ish)
     @test length(p.tasks) == 4
     @test length(p.graph) == 3
 
@@ -81,10 +81,9 @@ end
     @test any(v -> v == (idx(p, step), idx(p, step2)), p.graph)
 
     ts = Contrive.ordertasks(p)
-    println(ts)
     @test length(p.tasks) == length(ts)
     @test ts[1] == idx(p, p.root)
     es = Contrive.orderedges(p)
-    @test length(p.graph) == length(es)
+    @test length(es) == 2
     @test first(ts[1]) == idx(p, p.root)
 end

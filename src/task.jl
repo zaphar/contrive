@@ -12,3 +12,7 @@ end
 
 struct Root <: AbstractTask
 end
+
+name(t::Step) = t.name
+name(t::Milestone) = t.name
+name(t::Root) = "root"
